@@ -1,0 +1,99 @@
+class TodoItem:
+    def __init__(self, name, details):
+        self.name = name
+        self.details = details
+
+    def show(self, number):
+        print(f"\nTask {number}")
+        print(f"Name       : {self.name}")
+        print(f"Details    : {self.details}")
+        print("-" * 35)
+
+
+def add_task(task_list):
+    task_name = input("Enter task name: ")
+    task_details = input("Enter task details: ")
+    task_list.append(TodoItem(task_name, task_details))
+    print("Task successfully added.\n")
+
+
+def display_tasks(task_list):
+    if len(task_list) == 0:
+        print("No tasks found.\n")
+        return
+
+    for i, task in enumerate(task_list, start=1):
+        task.show(i)
+
+
+def edit_task(task_list):
+    if len(task_list) == 0:
+        print("No tasks available to update.\n")
+        return
+
+    display_tasks(task_list)
+
+    try:
+        choice = int(input("Select task number to update: "))
+        if 1 <= choice <= len(task_list):
+            new_name = input("Enter new task name: ")
+            new_details = input("Enter new task details: ")
+
+            task_list[choice - 1].name = new_name
+            task_list[choice - 1].details = new_details
+
+            print("Task updated successfully.\n")
+        else:
+            print("Invalid selection.\n")
+    except ValueError:
+        print("Please enter a valid number.\n")
+
+
+def remove_task(task_list):
+    if len(task_list) == 0:
+        print("No tasks available to delete.\n")
+        return
+
+    display_tasks(task_list)
+
+    try:
+        choice = int(input("Select task number to delete: "))
+        if 1 <= choice <= len(task_list):
+            deleted = task_list.pop(choice - 1)
+            print(f"Task '{deleted.name}' removed successfully.\n")
+        else:
+            print("Invalid selection.\n")
+    except ValueError:
+        print("Please enter a valid number.\n")
+
+
+def main():
+    task_storage = []
+
+    while True:
+        print("====== TASK MANAGEMENT SYSTEM ======")
+        print("1. Add New Task")
+        print("2. View All Tasks")
+        print("3. Update Existing Task")
+        print("4. Delete Task")
+        print("5. Exit")
+
+        user_choice = input("Enter your choice (1-5): ")
+
+        if user_choice == "1":
+            add_task(task_storage)
+        elif user_choice == "2":
+            display_tasks(task_storage)
+        elif user_choice == "3":
+            edit_task(task_storage)
+        elif user_choice == "4":
+            remove_task(task_storage)
+        elif user_choice == "5":
+            print("Program closed successfully.")
+            break
+        else:
+            print("Invalid option. Please try again.\n")
+
+
+if __name__ == "__main__":
+    main()

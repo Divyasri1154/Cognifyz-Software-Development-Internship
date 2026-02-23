@@ -1,0 +1,137 @@
+import os
+
+DATA_FILE = "task_records.txt"
+
+
+class WorkTask:
+    def __init__(self, name, info):
+        self.name = name
+        self.info = info
+
+    def to_line(self):
+        return f"{self.name}##{self.info}\n"
+
+
+def read_from_file():
+    records = []
+
+    if os.path.isfile(DATA_FILE):
+        try:
+            with open(DATA_FILE, "r") as f:
+                lines = f.readlines()
+                for entry in lines:
+                    data = entry.strip().split("##")
+                    if len(data) == 2:
+                        records.append(WorkTask(data[0], data[1]))
+        except Exception:
+            print("Unable to read saved tasks.")
+
+    return records
+
+
+def write_to_file(records):
+    try:
+        with open(DATA_FILE, "w") as f:
+            for item in records:
+                f.write(item.to_line())
+    except Exception:
+        print("Unable to save tasks.")
+
+
+def create_record(records):
+    task_name = input("Enter task name: ")
+    task_info = input("Enter task details: ")
+
+    new_task = WorkTask(task_name, task_info)
+    records.append(new_task)
+
+    write_to_file(records)
+    print("Task stored successfully.\n")
+
+
+def show_records(records):
+    if len(records) == 0:
+        print("No stored tasks.\n")
+        return
+
+    print("\n---- Saved Tasks ----")
+    count = 1
+    for item in records:
+        print(f"\nTask {count}")
+        print("Name   :", item.name)
+        print("Details:", item.info)
+        print("----------------------")
+        count += 1
+
+
+def modify_record(records):
+    show_records(records)
+
+    if len(records) == 0:
+        return
+
+    try:
+        selection = int(input("Enter task number to modify: "))
+        if 1 <= selection <= len(records):
+            updated_name = input("New task name: ")
+            updated_info = input("New task details: ")
+
+            records[selection - 1].name = updated_name
+            records[selection - 1].info = updated_info
+
+            write_to_file(records)
+            print("Task updated successfully.\n")
+        else:
+            print("Invalid task number.\n")
+    except ValueError:
+        print("Please enter a valid number.\n")
+
+
+def remove_record(records):
+    show_records(records)
+
+    if len(records) == 0:
+        return
+
+    try:
+        selection = int(input("Enter task number to remove: "))
+        if 1 <= selection <= len(records):
+            deleted_task = records.pop(selection - 1)
+            write_to_file(records)
+            print(f"Task '{deleted_task.name}' removed successfully.\n")
+        else:
+            print("Invalid task number.\n")
+    except ValueError:
+        print("Please enter a valid number.\n")
+
+
+def start_program():
+    task_data = read_from_file()
+
+    while True:
+        print("\n===== PERSISTENT TASK SYSTEM =====")
+        print("1 - Add Task")
+        print("2 - View Tasks")
+        print("3 - Edit Task")
+        print("4 - Delete Task")
+        print("5 - Exit")
+
+        user_input = input("Select option: ")
+
+        if user_input == "1":
+            create_record(task_data)
+        elif user_input == "2":
+            show_records(task_data)
+        elif user_input == "3":
+            modify_record(task_data)
+        elif user_input == "4":
+            remove_record(task_data)
+        elif user_input == "5":
+            print("Closing application...")
+            break
+        else:
+            print("Invalid selection. Try again.")
+
+
+if __name__ == "__main__":
+    start_program()

@@ -1,0 +1,49 @@
+import requests
+from bs4 import BeautifulSoup
+
+
+def fetch_quotes():
+    url = "http://quotes.toscrape.com"
+    collected_quotes = []
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+
+        soup = BeautifulSoup(response.text, "html.parser")
+        quote_blocks = soup.find_all("div", class_="quote")
+
+        for block in quote_blocks:
+            text = block.find("span", class_="text").get_text()
+            author = block.find("small", class_="author").get_text()
+            collected_quotes.append((text, author))
+
+    except requests.exceptions.RequestException:
+        print("Error fetching data from website.")
+
+    return collected_quotes
+
+
+def display_quotes(quotes):
+    if not quotes:
+        print("No quotes found.")
+        return
+
+    print("\n--- Latest Quotes ---")
+    for index, (text, author) in enumerate(quotes, start=1):
+        print(f"\nQuote {index}")
+        print(text)
+        print(f"- {author}")
+        print("-" * 40)
+
+
+def main():
+    print("=== Web Scraping Program ===")
+    print("Fetching quotes from website...\n")
+
+    quotes = fetch_quotes()
+    display_quotes(quotes)
+
+
+if __name__ == "__main__":
+    main()

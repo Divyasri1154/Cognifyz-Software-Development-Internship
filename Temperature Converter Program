@@ -1,0 +1,42 @@
+def convert_c_to_f(value):
+    return (value * 9 / 5) + 32
+
+
+def convert_f_to_c(value):
+    return (value - 32) * 5 / 9
+
+
+print("***** Temperature Converter Application *****")
+
+running = True
+
+while running:
+    print("\nSelect an option:")
+    print("1 -> Convert Celsius to Fahrenheit")
+    print("2 -> Convert Fahrenheit to Celsius")
+    print("3 -> Quit Program")
+
+    user_selection = input("Enter option number: ")
+
+    if user_selection == "1":
+        try:
+            c_value = float(input("Enter temperature in Celsius: "))
+            f_result = convert_c_to_f(c_value)
+            print(f"{c_value}°C is equal to {f_result:.2f}°F")
+        except:
+            print("Invalid input! Please enter a numeric value.")
+
+    elif user_selection == "2":
+        try:
+            f_value = float(input("Enter temperature in Fahrenheit: "))
+            c_result = convert_f_to_c(f_value)
+            print(f"{f_value}°F is equal to {c_result:.2f}°C")
+        except:
+            print("Invalid input! Please enter a numeric value.")
+
+    elif user_selection == "3":
+        print("Thank you for using the converter.")
+        running = False
+
+    else:
+        print("Invalid option selected. Please try again.")
